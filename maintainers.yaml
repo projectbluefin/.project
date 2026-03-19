@@ -1,0 +1,19 @@
+# Maintainer roster for Project Bluefin
+# Documentation: https://github.com/cncf/automation/tree/main/utilities/dot-project
+
+maintainers:
+  - project_id: "bluefin"
+    org: "projectbluefin"
+    teams:
+      - name: "project-maintainers"
+        members:
+          - castrojo
+          - marcoceppi
+          - tulilirockz
+          - daegalus
+          - hanthor
+          - alatiera
+          - inffy
+          - renner0e
+          - ahmedadan
+          - p5
