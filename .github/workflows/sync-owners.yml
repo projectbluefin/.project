@@ -64,6 +64,10 @@ jobs:
 
           base=$(gh api "repos/$REPO" --jq .default_branch)
           current=$(gh api "repos/$REPO/contents/OWNERS?ref=$base" --jq .content 2>/dev/null | base64 -d || true)
+          if [ -z "$current" ]; then
+            echo "$REPO has no OWNERS on $base yet (not on Prow); its cutover PR adds it"
+            exit 0
+          fi
           if [ "$current" = "$(cat OWNERS)" ]; then
             echo "OWNERS in $REPO is already up to date"
             exit 0
