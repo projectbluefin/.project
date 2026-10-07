@@ -1,0 +1,74 @@
+# Organization-wide Prow configuration for projectbluefin.
+# Read by cncf/prow-github-actions from <org>/.project/prow.yaml for every repository.
+# Upstream reference: https://github.com/cncf/prow-github-actions/blob/v3.0.1/docs/configuration.md
+#
+# Rule: a label exists here only if something acts on it (Prow's merge gate or needs-* rule,
+# or the Hive work queue). After any change, run Actions -> Prow -> Run workflow (label-sync)
+# in each repository.
+labels:
+  kind:
+    - name: bug
+      color: e11d21
+      description: Something is broken.
+    - name: regression
+      color: e11d21
+      description: Worked in a previous release and is broken now.
+    - name: security
+      color: e11d21
+      description: A security problem.
+    - name: feature
+      color: c7def8
+      description: A new capability.
+    - name: documentation
+      color: c7def8
+      description: Documentation only.
+    - name: cleanup
+      color: c5def5
+      description: Tech debt, refactoring, tests or process.
+
+  # /triage accepted: the scope is accepted and the issue is ready for work
+  triage:
+    values:
+      - name: accepted
+        color: 8fc951
+        description: Scope accepted; ready for work.
+    exclusive: true
+
+  priority:
+    values:
+      - name: critical-urgent
+        color: e11d21
+        description: Drop other work for this.
+      - name: important-soon
+        color: eb6420
+        description: Do this next.
+    exclusive: true
+
+  # /label blocked: waiting on something outside this repository (Hive skips it)
+  labels:
+    - name: blocked
+      color: e11d21
+      description: Waiting on something outside this repository.
+
+  # no lifecycle, stage or status labels: nothing acts on them
+  lifecycle: []
+  stage: []
+  status: []
+
+require_matching_label:
+  - regexp: ^kind/
+    missing_label: needs-kind
+    issues: true
+    prs: false
+    missing_comment: "Please set a kind: `/kind bug`, `/kind feature`, `/kind cleanup`, `/kind documentation`, `/kind regression` or `/kind security`."
+
+# `hold` is the label Hive already uses for its own holds; /hold applies the same label
+hold:
+  label: hold
+
+tide:
+  merge_method: squash
+  merge_queue: auto
+
+blunderbuss:
+  request_count: 2
