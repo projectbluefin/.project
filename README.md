@@ -14,6 +14,10 @@ This repository contains standardized metadata about [Project Bluefin](https://p
 
 The metadata is automatically validated on every PR via the GitHub Actions workflow in `.github/workflows/validate.yaml`.
 
+The upstream metadata actions compile current CNCF validator sources. Keep both
+`go_version` inputs aligned with `utilities/dot-project/go.mod` in that source
+repository (currently Go 1.27.1).
+
 To validate locally:
 
 ```bash
