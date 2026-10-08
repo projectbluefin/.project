@@ -1,0 +1,35 @@
+name: Authorize Prow triage commands
+
+on:
+  workflow_call:
+    outputs:
+      triage:
+        description: Whether the comment author belongs to an applicable Prow triage roster.
+        value: ${{ jobs.roster.outputs.triage }}
+
+permissions: {}
+
+jobs:
+  roster:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      triage: ${{ steps.authorize.outputs.triage }}
+    steps:
+      # Only trusted .project code and roster from its canonical main branch.
+      # Never check out the issue/PR repository or its head.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          repository: projectbluefin/.project
+          ref: main
+          path: .project
+          persist-credentials: false
+
+      - name: Read the current canonical roster and authorize the comment author
+        id: authorize
+        run: |
+          set -euo pipefail
+          # Membership changes take effect from main without updating every caller.
+          yq -o=json '.' .project/maintainers.yaml > maintainers.json
+          node .project/scripts/prow-triage.cjs "$GITHUB_EVENT_PATH" maintainers.json >> "$GITHUB_OUTPUT"

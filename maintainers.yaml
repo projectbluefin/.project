@@ -14,3 +14,14 @@ maintainers:
           - alatiera
           - ahmedadan
           - Danathar
+      # Prow command authorization only; not a GitHub organization team.
+      - name: "triage"
+        members:
+          - ximian
+          - Raindrac
+          - repires
+          - jumpyvi
+      # Additional Prow triagers for this repository only.
+      - name: "hplip-printer-app-triage"
+        members:
+          - jfmongrain
