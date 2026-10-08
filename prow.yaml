@@ -2,8 +2,8 @@
 # Read by cncf/prow-github-actions from <org>/.project/prow.yaml for every repository.
 # Upstream reference: https://github.com/cncf/prow-github-actions/blob/v3.0.1/docs/configuration.md
 #
-# Rule: a label exists here only if something acts on it (Prow's merge gate or needs-* rule,
-# or the Hive work queue). After any change, run Actions -> Prow -> Run workflow (label-sync)
+# Rule: a label exists here only if something acts on it (Prow commands, merge gate or
+# needs-* rule, or the Hive work queue). After any change, run Actions -> Prow -> Run workflow (label-sync)
 # in each repository.
 labels:
   kind:
@@ -25,6 +25,27 @@ labels:
     - name: cleanup
       color: c5def5
       description: Tech debt, refactoring, tests or process.
+
+  # Public categorization: /area and /remove-area are available to any commenter.
+  area:
+    - name: desktop
+      color: c2e0c6
+      description: Desktop environment and shell.
+    - name: flatpak
+      color: c2e0c6
+      description: Flatpak applications and runtimes.
+    - name: gaming
+      color: c2e0c6
+      description: Gaming stack and Steam.
+    - name: hardware
+      color: c2e0c6
+      description: Kernel, drivers, GPU and hardware support.
+    - name: installer
+      color: c2e0c6
+      description: ISO installer and first-boot setup.
+    - name: dx
+      color: c2e0c6
+      description: Developer experience and containers.
 
   # /triage accepted: the scope is accepted and the issue is ready for work
   triage:

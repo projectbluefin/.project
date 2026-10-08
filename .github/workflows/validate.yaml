@@ -5,11 +5,19 @@ on:
     paths:
       - 'project.yaml'
       - 'maintainers.yaml'
+      - 'prow.yaml'
+      - '.github/workflows/prow-authorize.yml'
+      - 'scripts/prow-triage.cjs'
+      - 'tests/prow-triage.test.cjs'
   push:
     branches: [main]
     paths:
       - 'project.yaml'
       - 'maintainers.yaml'
+      - 'prow.yaml'
+      - '.github/workflows/prow-authorize.yml'
+      - 'scripts/prow-triage.cjs'
+      - 'tests/prow-triage.test.cjs'
 
 permissions:
   contents: read
@@ -38,3 +46,16 @@ jobs:
         with:
           maintainers_file: 'maintainers.yaml'
           verify_maintainers: 'false'
+
+  validate-triage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - run: node --test tests/prow-triage.test.cjs
+      - name: Validate the canonical roster with the runtime authorization parser
+        run: |
+          yq -o=json '.' maintainers.yaml > maintainers.json
+          printf '%s\n' '{}' > event.json
+          node scripts/prow-triage.cjs event.json maintainers.json
