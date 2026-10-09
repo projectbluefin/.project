@@ -52,24 +52,24 @@ labels:
     values:
       - name: accepted
         color: 8fc951
-        description: Scope accepted; ready for work.
+        description: Scope accepted; ready for work. Use `/triage accepted`.
     exclusive: true
 
   priority:
     values:
       - name: critical-urgent
         color: e11d21
-        description: Drop other work for this.
+        description: Drop other work for this. Use `/priority critical-urgent`.
       - name: important-soon
         color: eb6420
-        description: Do this next.
+        description: Do this next. Use `/priority important-soon`.
     exclusive: true
 
   # /label blocked: waiting on something outside this repository (Hive skips it)
   labels:
     - name: blocked
       color: e11d21
-      description: Waiting on something outside this repository.
+      description: Waiting on something outside this repository. Use `/label blocked` or `/remove-label blocked`.
 
   # no lifecycle, stage or status labels: nothing acts on them
   lifecycle: []
