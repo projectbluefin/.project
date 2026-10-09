@@ -52,24 +52,24 @@ labels:
     values:
       - name: accepted
         color: 8fc951
-        description: Scope accepted; ready for work.
+        description: Scope accepted; ready for work. Use `/triage accepted`.
     exclusive: true
 
   priority:
     values:
       - name: critical-urgent
         color: e11d21
-        description: Drop other work for this.
+        description: Drop other work for this. Use `/priority critical-urgent`.
       - name: important-soon
         color: eb6420
-        description: Do this next.
+        description: Do this next. Use `/priority important-soon`.
     exclusive: true
 
   # /label blocked: waiting on something outside this repository (Hive skips it)
   labels:
     - name: blocked
       color: e11d21
-      description: Waiting on something outside this repository.
+      description: Waiting on something outside this repository. Use `/label blocked` or `/remove-label blocked`.
 
   # no lifecycle, stage or status labels: nothing acts on them
   lifecycle: []
@@ -82,7 +82,11 @@ require_matching_label:
     issues: true
     prs: false
     missing_comment: "Please set a kind: `/kind bug`, `/kind feature`, `/kind cleanup`, `/kind documentation`, `/kind regression` or `/kind security`."
-
+  - regexp: ^triage/
+    missing_label: needs-triage
+    issues: true
+    prs: false
+    missing_comment: "To accept this issue, comment `/triage accepted`. To categorize, comment `/area <area>` or `/kind <kind>`."
 # `hold` is the label Hive already uses for its own holds; /hold applies the same label
 hold:
   label: hold
