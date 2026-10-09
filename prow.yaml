@@ -82,7 +82,11 @@ require_matching_label:
     issues: true
     prs: false
     missing_comment: "Please set a kind: `/kind bug`, `/kind feature`, `/kind cleanup`, `/kind documentation`, `/kind regression` or `/kind security`."
-
+  - regexp: ^triage/
+    missing_label: needs-triage
+    issues: true
+    prs: false
+    missing_comment: "To accept this issue, comment `/triage accepted`. To categorize, comment `/area <area>` or `/kind <kind>`."
 # `hold` is the label Hive already uses for its own holds; /hold applies the same label
 hold:
   label: hold
