@@ -81,7 +81,10 @@ require_matching_label:
     missing_label: needs-kind
     issues: true
     prs: false
-    missing_comment: "Please set a kind: `/kind bug`, `/kind feature`, `/kind cleanup`, `/kind documentation`, `/kind regression` or `/kind security`."
+    missing_comment: |-
+      Please set a kind: `/kind bug`, `/kind feature`, `/kind cleanup`, `/kind documentation`, `/kind regression` or `/kind security`.
+
+      See [Triage & Prow Commands](https://docs.projectbluefin.io/contributing/#triage--prow-commands) for all available commands.
   - regexp: ^triage/
     missing_label: needs-triage
     issues: true
