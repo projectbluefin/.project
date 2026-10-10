@@ -8,7 +8,10 @@ on:
       - 'prow.yaml'
       - '.github/workflows/prow-authorize.yml'
       - 'scripts/prow-triage.cjs'
+      - 'scripts/prow-transfer.cjs'
       - 'tests/prow-triage.test.cjs'
+      - 'tests/prow-transfer.test.cjs'
+      - '.github/workflows/prow-transfer.yml'
   push:
     branches: [main]
     paths:
@@ -17,7 +20,10 @@ on:
       - 'prow.yaml'
       - '.github/workflows/prow-authorize.yml'
       - 'scripts/prow-triage.cjs'
+      - 'scripts/prow-transfer.cjs'
       - 'tests/prow-triage.test.cjs'
+      - 'tests/prow-transfer.test.cjs'
+      - '.github/workflows/prow-transfer.yml'
 
 permissions:
   contents: read
@@ -55,7 +61,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           persist-credentials: false
-      - run: node --test tests/prow-triage.test.cjs
+      - run: node --test tests/prow-triage.test.cjs tests/prow-transfer.test.cjs
       - name: Validate the canonical roster with the runtime authorization parser
         run: |
           yq -o=json '.' maintainers.yaml > maintainers.json

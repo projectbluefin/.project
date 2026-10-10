@@ -28,7 +28,8 @@ make build
 ./bin/validator -config /path/to/project.yaml
 ```
 
-Run the Prow roster authorization tests with `node --test tests/prow-triage.test.cjs`.
+Run the Prow roster authorization and transfer tests with:
+`node --test tests/prow-triage.test.cjs tests/prow-transfer.test.cjs`.
 
 ## Updating
 
@@ -54,6 +55,10 @@ gaming, hardware, installer and dx areas. `/kind` and `/hold` retain their
 upstream policies. `triage` membership does not grant `/lgtm`, `/approve`, code
 write access, or issue-closing permissions. `sync-owners.yml` continues to
 generate approvers from `project-maintainers` only.
+
+`/transfer <repository>` (and `/transfer-issue`) allows triagers and maintainers
+to transfer issues between Project Bluefin repositories via the reusable
+`.github/workflows/prow-transfer.yml` workflow and the `MERGERAPTOR` GitHub App.
 
 Deploy this repository's authorization workflow and roster before updating
 the six existing Prow callers: common, chairlift, gutenprint-printer-app,

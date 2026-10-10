@@ -1,0 +1,60 @@
+name: Execute Prow /transfer commands
+
+on:
+  workflow_call:
+    inputs:
+      authorized:
+        description: Whether the commenter has triage permissions.
+        required: true
+        type: string
+    secrets:
+      MERGERAPTOR_APP_ID:
+        required: true
+      MERGERAPTOR_PRIVATE_KEY:
+        required: true
+
+permissions: {}
+
+jobs:
+  transfer:
+    # Only run for authorized triage members on issue comments.
+    if: inputs.authorized == 'true' && github.event_name == 'issue_comment' && !github.event.issue.pull_request
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          repository: projectbluefin/.project
+          ref: main
+          path: .project
+          persist-credentials: false
+
+      - name: Parse /transfer command
+        id: parse
+        run: |
+          set -euo pipefail
+          node .project/scripts/prow-transfer.cjs "$GITHUB_EVENT_PATH" >> "$GITHUB_OUTPUT"
+
+      - name: Generate transfer token
+        if: steps.parse.outputs.target != ''
+        id: app-token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3
+        with:
+          client-id: ${{ secrets.MERGERAPTOR_APP_ID }}
+          private-key: ${{ secrets.MERGERAPTOR_PRIVATE_KEY }}
+          owner: projectbluefin
+          repositories: ${{ steps.parse.outputs.target }},${{ github.event.repository.name }}
+          permission-issues: write
+
+      - name: Transfer issue
+        if: steps.parse.outputs.target != ''
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          TARGET_REPO: projectbluefin/${{ steps.parse.outputs.target }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          SOURCE_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          echo "Transferring #${ISSUE_NUMBER} to ${TARGET_REPO}"
+          gh issue transfer "${ISSUE_NUMBER}" "${TARGET_REPO}" --repo "${SOURCE_REPO}"
