@@ -22,7 +22,12 @@ maintainers:
           - repires
           - jumpyvi
           - KiKaraage
+          - HuntedRaven7
       # Additional Prow triagers for this repository only.
       - name: "hplip-printer-app-triage"
         members:
           - jfmongrain
+      # Additional Prow triagers for just bluefin-lts repo.
+      - name: "bluefin-lts"
+        members: 
+          - HuntedRaven7
