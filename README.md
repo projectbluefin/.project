@@ -56,7 +56,7 @@ write access, or issue-closing permissions. `sync-owners.yml` continues to
 generate approvers from `project-maintainers` only.
 
 Deploy this repository's authorization workflow and roster before updating
-the six existing Prow callers: common, chairlift, gutenprint-printer-app,
-hplip-printer-app, ps-printer-app and ghostscript-printer-app. Then run
+the seven existing Prow callers: common, chairlift, gutenprint-printer-app,
+hplip-printer-app, ps-printer-app, ghostscript-printer-app and server. Then run
 **Actions → Prow → Run workflow** in each to sync area labels. Repositories
 not yet using Prow, including Dakota, are unchanged.
