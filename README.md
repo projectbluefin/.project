@@ -61,7 +61,7 @@ to transfer issues between Project Bluefin repositories via the reusable
 `.github/workflows/prow-transfer.yml` workflow and the `MERGERAPTOR` GitHub App.
 
 Deploy this repository's authorization workflow and roster before updating
-the six existing Prow callers: common, chairlift, gutenprint-printer-app,
-hplip-printer-app, ps-printer-app and ghostscript-printer-app. Then run
+the seven existing Prow callers: common, chairlift, gutenprint-printer-app,
+hplip-printer-app, ps-printer-app, ghostscript-printer-app and server. Then run
 **Actions → Prow → Run workflow** in each to sync area labels. Repositories
 not yet using Prow, including Dakota, are unchanged.
