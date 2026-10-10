@@ -23,6 +23,7 @@ maintainers:
           - jumpyvi
           - KiKaraage
           - HuntedRaven7
+          - marczuverink
       # Additional Prow triagers for this repository only.
       - name: "hplip-printer-app-triage"
         members:
