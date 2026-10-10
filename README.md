@@ -69,6 +69,6 @@ branch (projectbluefin/common#1446).
 
 Deploy this repository's authorization workflow and roster before updating
 the Prow callers: common, chairlift, dakota-iso, gutenprint-printer-app,
-hplip-printer-app, ps-printer-app, ghostscript-printer-app and utah. Then run
+hplip-printer-app, ps-printer-app, ghostscript-printer-app, utah and server. Then run
 **Actions → Prow → Run workflow** in each to sync area labels. Repositories
 not yet using Prow remain unchanged.
