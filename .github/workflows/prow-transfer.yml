@@ -7,6 +7,13 @@ on:
         description: Whether the commenter has triage permissions.
         required: true
         type: string
+      app-ref:
+        description: >-
+          Ref of projectbluefin/.project to check out for the /transfer parser.
+          Pin to the same commit the reusable workflow file is pinned to so the
+          executed parser code is also pinned (projectbluefin/common#1446).
+        required: true
+        type: string
     secrets:
       MERGERAPTOR_APP_ID:
         required: true
@@ -26,7 +33,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           repository: projectbluefin/.project
-          ref: main
+          ref: ${{ inputs.app-ref }}
           path: .project
           persist-credentials: false
 
