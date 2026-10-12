@@ -53,8 +53,9 @@ non-comment events and the scheduled merge backstop do not perform roster lookup
 `/area` and `/remove-area` are public for the configured desktop, flatpak,
 gaming, hardware, installer and dx areas. `/kind` and `/hold` retain their
 upstream policies. `triage` membership does not grant `/lgtm`, `/approve`, code
-write access, or issue-closing permissions. `sync-owners.yml` continues to
-generate approvers from `project-maintainers` only.
+write access, or issue-closing permissions, except in `homebrew-tap`, where
+`sync-owners.yml` adds `triage` members to `OWNERS` as approvers and reviewers.
+Elsewhere it generates approvers from `project-maintainers` only.
 
 `/transfer <repository>` (and `/transfer-issue`) allows triagers and maintainers
 to transfer issues between Project Bluefin repositories via the reusable
