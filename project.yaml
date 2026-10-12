@@ -33,6 +33,7 @@ repositories:
   - "https://github.com/projectbluefin/finpilot"
   - "https://github.com/projectbluefin/fsdk-containers"
   - "https://github.com/projectbluefin/homebrew-bluefinctl"
+  - "https://github.com/projectbluefin/homebrew-tap"
   - "https://github.com/projectbluefin/housekeeping"
   - "https://github.com/projectbluefin/iso"
   - "https://github.com/projectbluefin/knuckle"
