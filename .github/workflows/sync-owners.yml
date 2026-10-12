@@ -34,6 +34,7 @@ jobs:
           - dakota-iso
           - utah
           - server
+          - homebrew-tap
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
@@ -61,7 +62,13 @@ jobs:
             echo '# Generated from projectbluefin/.project maintainers.yaml by sync-owners.yml.'
             echo '# Do not edit here: change maintainers.yaml in projectbluefin/.project.'
             echo 'approvers:'
-            yq -r '.maintainers[].teams[] | select(.name == "project-maintainers") | .members[]' maintainers.yaml | sort -f | sed 's/^/  - /'
+            if [ "$REPO" = "projectbluefin/homebrew-tap" ]; then
+              yq -r '.maintainers[].teams[] | select(.name == "project-maintainers" or .name == "triage") | .members[]' maintainers.yaml | sort -fu | sed 's/^/  - /'
+              echo 'reviewers:'
+              yq -r '.maintainers[].teams[] | select(.name == "project-maintainers" or .name == "triage") | .members[]' maintainers.yaml | sort -fu | sed 's/^/  - /'
+            else
+              yq -r '.maintainers[].teams[] | select(.name == "project-maintainers") | .members[]' maintainers.yaml | sort -fu | sed 's/^/  - /'
+            fi
           } > OWNERS
           grep -q '^  - ' OWNERS || { echo "::error::no members found in maintainers.yaml"; exit 1; }
 
