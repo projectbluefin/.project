@@ -32,6 +32,7 @@ jobs:
           - ps-printer-app
           - ghostscript-printer-app
           - dakota-iso
+          - dakota
           - utah
           - server
           - homebrew-tap
