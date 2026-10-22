@@ -25,6 +25,7 @@ maintainers:
           - HuntedRaven7
           - marczuverink
           - mrbobbytables
+          - juanresendiz813
       # Additional Prow triagers for this repository only.
       - name: "hplip-printer-app-triage"
         members:
@@ -33,3 +34,4 @@ maintainers:
       - name: "bluefin-lts"
         members: 
           - HuntedRaven7
+          - juanresendiz813
