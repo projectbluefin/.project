@@ -25,6 +25,10 @@ maintainers:
           - HuntedRaven7
           - marczuverink
           - mrbobbytables
+      # Additional OWNERS approvers for this repository only (sync-owners.yml).
+      - name: "server-approvers"
+        members:
+          - jeefy
       # Additional Prow triagers for this repository only.
       - name: "hplip-printer-app-triage"
         members:

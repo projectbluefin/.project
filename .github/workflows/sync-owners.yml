@@ -60,16 +60,18 @@ jobs:
           BRANCH: chore/sync-owners
         run: |
           set -euo pipefail
+          # <repository>-approvers adds approvers for that repository only.
+          export SCOPED="${REPO#projectbluefin/}-approvers"
           {
             echo '# Generated from projectbluefin/.project maintainers.yaml by sync-owners.yml.'
             echo '# Do not edit here: change maintainers.yaml in projectbluefin/.project.'
             echo 'approvers:'
             if [ "$REPO" = "projectbluefin/homebrew-tap" ]; then
-              yq -r '.maintainers[].teams[] | select(.name == "project-maintainers" or .name == "triage") | .members[]' maintainers.yaml | sort -fu | sed 's/^/  - /'
+              yq -r '.maintainers[].teams[] | select(.name == "project-maintainers" or .name == "triage" or .name == strenv(SCOPED)) | .members[]' maintainers.yaml | sort -fu | sed 's/^/  - /'
               echo 'reviewers:'
-              yq -r '.maintainers[].teams[] | select(.name == "project-maintainers" or .name == "triage") | .members[]' maintainers.yaml | sort -fu | sed 's/^/  - /'
+              yq -r '.maintainers[].teams[] | select(.name == "project-maintainers" or .name == "triage" or .name == strenv(SCOPED)) | .members[]' maintainers.yaml | sort -fu | sed 's/^/  - /'
             else
-              yq -r '.maintainers[].teams[] | select(.name == "project-maintainers") | .members[]' maintainers.yaml | sort -fu | sed 's/^/  - /'
+              yq -r '.maintainers[].teams[] | select(.name == "project-maintainers" or .name == strenv(SCOPED)) | .members[]' maintainers.yaml | sort -fu | sed 's/^/  - /'
             fi
           } > OWNERS
           grep -q '^  - ' OWNERS || { echo "::error::no members found in maintainers.yaml"; exit 1; }
