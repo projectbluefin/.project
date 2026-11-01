@@ -23,6 +23,7 @@ repositories:
   - "https://github.com/projectbluefin/bluefin"
   - "https://github.com/projectbluefin/bluefin-lts"
   - "https://github.com/projectbluefin/bluefin-mcp"
+  - "https://github.com/projectbluefin/bluefin-report"
   - "https://github.com/projectbluefin/bluefinctl"
   - "https://github.com/projectbluefin/bluespeed"
   - "https://github.com/projectbluefin/bonedigger"
