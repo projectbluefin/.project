@@ -27,6 +27,7 @@ jobs:
         repo:
           - common
           - chairlift
+          - bluefin-report
           - gutenprint-printer-app
           - hplip-printer-app
           - ps-printer-app
