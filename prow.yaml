@@ -81,15 +81,28 @@ require_matching_label:
     missing_label: needs-kind
     issues: true
     prs: false
-    missing_comment: |-
-      Please set a kind: `/kind bug`, `/kind feature`, `/kind cleanup`, `/kind documentation`, `/kind regression` or `/kind security`.
-
-      See [Triage & Prow Commands](https://docs.projectbluefin.io/contributing/#triage--prow-commands) for all available commands.
   - regexp: ^triage/
     missing_label: needs-triage
     issues: true
     prs: false
-    missing_comment: "To accept this issue, comment `/triage accepted`. To categorize, comment `/area <area>` or `/kind <kind>`."
+    missing_comment: |-
+      ## Issue triage
+
+      **Next action: a triager or maintainer reviews this issue.**
+
+      ### Reporter or contributor
+
+      - If no `kind/*` label is set, categorize the issue with one of: `/kind bug`, `/kind regression`, `/kind security`, `/kind feature`, `/kind documentation` or `/kind cleanup`.
+      - Optionally add an area with `/area <area>`: `desktop`, `flatpak`, `gaming`, `hardware`, `installer` or `dx`.
+
+      ### Triager or maintainer
+
+      - Review the report and ask the reporter for any missing information.
+      - When the scope is accepted and the issue is ready for work, comment `/triage accepted`. Only triagers and maintainers can do this; acceptance does not assign an implementer.
+
+      `needs-kind` clears when a kind is set. `needs-triage` and this post clear when triage is accepted.
+
+      See [Triage & Prow Commands](https://docs.projectbluefin.io/contributing/#triage--prow-commands) for all available commands.
 # `hold` is the label Hive already uses for its own holds; /hold applies the same label
 hold:
   label: hold
