@@ -34,6 +34,7 @@ Run the Prow roster authorization and transfer tests with:
 ## Updating
 
 - **Adding a maintainer**: Edit `maintainers.yaml` and open a PR
+- **Adding an approver for one repository**: Add them to a `<repository>-approvers` team in `maintainers.yaml` (the next `sync-owners.yml` run opens the OWNERS PR there)
 - **Adding a triager**: Edit the `triage` team in `maintainers.yaml` and open a PR; this grants Prow commands only, not GitHub organization membership or repository permissions
 - **Updating project metadata**: Edit `project.yaml` and open a PR
 - **Schema reference**: https://github.com/cncf/automation/tree/main/utilities/dot-project
@@ -55,7 +56,9 @@ gaming, hardware, installer and dx areas. `/kind` and `/hold` retain their
 upstream policies. `triage` membership does not grant `/lgtm`, `/approve`, code
 write access, or issue-closing permissions, except in `homebrew-tap`, where
 `sync-owners.yml` adds `triage` members to `OWNERS` as approvers and reviewers.
-Elsewhere it generates approvers from `project-maintainers` only.
+Elsewhere it generates approvers from `project-maintainers`, plus the members of a
+`<repository>-approvers` team for that repository only: `server-approvers` makes
+`jeefy` an approver on `server`.
 
 `/transfer <repository>` (and `/transfer-issue`) allows triagers and maintainers
 to transfer issues between Project Bluefin repositories via the reusable
