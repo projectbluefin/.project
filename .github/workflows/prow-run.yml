@@ -50,9 +50,12 @@ jobs:
     env:
       HAS_APP: ${{ secrets.MERGERAPTOR_APP_ID != '' && secrets.MERGERAPTOR_PRIVATE_KEY != '' }}
     steps:
+      # A failure here (for example the App lacks one of the scopes below) leaves
+      # the token empty, and Prow runs with GITHUB_TOKEN exactly as before.
       - name: Generate Prow token
         id: app-token
         if: env.HAS_APP == 'true'
+        continue-on-error: true
         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3
         with:
           client-id: ${{ secrets.MERGERAPTOR_APP_ID }}

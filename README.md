@@ -116,7 +116,7 @@ and passes the same two secrets as `transfer`:
 
 When the secrets are unavailable to a run (for example a review on a fork pull
 request), the workflow falls back to the caller's `GITHUB_TOKEN`, which is what
-every caller used before. With the App token, Prow's comments and label changes come from
+every caller used before. The same fallback applies if the App token cannot be created. With the App token, Prow's comments and label changes come from
 `mergeraptor[bot]` instead of `github-actions[bot]`.
 
 Deploy this repository's authorization workflow and roster before updating
