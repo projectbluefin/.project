@@ -1,0 +1,73 @@
+name: Run Prow as the MERGERAPTOR GitHub App
+
+# Callers use this instead of cncf/prow-github-actions/.github/workflows/prow.yml so
+# Prow acts with a MERGERAPTOR App token rather than the job's GITHUB_TOKEN. GitHub
+# does not start workflow runs for events caused by GITHUB_TOKEN, so a pull request
+# Prow adds to a merge queue with that token never gets its merge_group checks and
+# waits in the queue forever (chairlift#757, 2026-11-14). Events caused by an App
+# token do start workflow runs.
+#
+# Where the App secrets are unavailable (a pull_request_review on a fork pull
+# request, for example) the job falls back to the caller's GITHUB_TOKEN, which is
+# what every caller used before this workflow existed.
+
+on:
+  workflow_call:
+    inputs:
+      prow-commands:
+        description: The /commands to enable on issue_comment, space separated.
+        type: string
+        required: true
+      jobs:
+        description: The Prow jobs to run on schedule, push and pull_request events, e.g. 'lgtm' or 'sweep lgtm'.
+        type: string
+        required: false
+        default: lgtm
+      merge-method:
+        description: "'merge', 'squash' or 'rebase'; tide.merge_method in prow.yaml wins. Empty means the action's default."
+        type: string
+        required: false
+        default: ''
+    secrets:
+      MERGERAPTOR_APP_ID:
+        required: false
+      MERGERAPTOR_PRIVATE_KEY:
+        required: false
+
+permissions: {}
+
+jobs:
+  prow:
+    runs-on: ubuntu-latest
+    # Same scopes as the upstream reusable workflow, for the GITHUB_TOKEN fallback.
+    # The App token below asks for the same five scopes.
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+      statuses: write
+      actions: write
+    env:
+      HAS_APP: ${{ secrets.MERGERAPTOR_APP_ID != '' && secrets.MERGERAPTOR_PRIVATE_KEY != '' }}
+    steps:
+      - name: Generate Prow token
+        id: app-token
+        if: env.HAS_APP == 'true'
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3
+        with:
+          client-id: ${{ secrets.MERGERAPTOR_APP_ID }}
+          private-key: ${{ secrets.MERGERAPTOR_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: ${{ github.event.repository.name }}
+          permission-contents: write
+          permission-issues: write
+          permission-pull-requests: write
+          permission-statuses: write
+          permission-actions: write
+
+      - uses: cncf/prow-github-actions@a192ee15687d4ede4d553ff0929b2b296666afd7 # v3.5.0
+        with:
+          github-token: ${{ steps.app-token.outputs.token || github.token }}
+          prow-commands: ${{ inputs.prow-commands }}
+          jobs: ${{ inputs.jobs }}
+          merge-method: ${{ inputs.merge-method }}
