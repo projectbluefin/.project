@@ -6,6 +6,9 @@ on:
       - 'project.yaml'
       - 'maintainers.yaml'
       - 'prow.yaml'
+      - '.github/workflows/validate.yaml'
+      - '.github/workflows/sync-owners.yml'
+      - 'scripts/validate-prow.mjs'
       - '.github/workflows/prow-authorize.yml'
       - 'scripts/prow-triage.cjs'
       - 'scripts/prow-transfer.cjs'
@@ -18,6 +21,9 @@ on:
       - 'project.yaml'
       - 'maintainers.yaml'
       - 'prow.yaml'
+      - '.github/workflows/validate.yaml'
+      - '.github/workflows/sync-owners.yml'
+      - 'scripts/validate-prow.mjs'
       - '.github/workflows/prow-authorize.yml'
       - 'scripts/prow-triage.cjs'
       - 'scripts/prow-transfer.cjs'
@@ -67,3 +73,44 @@ jobs:
           yq -o=json '.' maintainers.yaml > maintainers.json
           printf '%s\n' '{}' > event.json
           node scripts/prow-triage.cjs event.json maintainers.json
+
+  validate-prow:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
+      - name: Check out the reviewed production parser and lockfile
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          repository: cncf/prow-github-actions
+          ref: a192ee15687d4ede4d553ff0929b2b296666afd7 # v3.5.0
+          path: .prow-upstream
+          persist-credentials: false
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: '24'
+
+      - name: Install the pinned upstream dependencies without lifecycle scripts
+        working-directory: .prow-upstream
+        run: npm ci --ignore-scripts
+
+      - name: Fetch the actual default-branch printer overrides as data
+        run: |
+          set -euo pipefail
+          for repo in gutenprint-printer-app hplip-printer-app ps-printer-app ghostscript-printer-app; do
+            mkdir -p "$RUNNER_TEMP/prow-overrides/$repo"
+            curl --fail --silent --show-error --location --max-time 30 \
+              "https://raw.githubusercontent.com/projectbluefin/$repo/main/.github/prow.yaml" \
+              --output "$RUNNER_TEMP/prow-overrides/$repo/prow.yaml"
+          done
+
+      - name: Validate canonical and merged configurations with the production parser
+        run: |
+          .prow-upstream/node_modules/.bin/esbuild scripts/validate-prow.mjs \
+            --bundle --platform=node --format=cjs --target=node24 \
+            --outfile="$RUNNER_TEMP/validate-prow.cjs"
+          node "$RUNNER_TEMP/validate-prow.cjs" prow.yaml "$RUNNER_TEMP"/prow-overrides/*/prow.yaml

@@ -1,10 +1,10 @@
 # Organization-wide Prow configuration for projectbluefin.
 # Read by cncf/prow-github-actions from <org>/.project/prow.yaml for every repository.
-# Upstream reference: https://github.com/cncf/prow-github-actions/blob/v3.0.1/docs/configuration.md
+# Upstream reference: https://github.com/cncf/prow-github-actions/blob/a192ee15687d4ede4d553ff0929b2b296666afd7/docs/configuration.md
 #
 # Rule: a label exists here only if something acts on it (Prow commands, merge gate or
 # needs-* rule, or the Hive work queue). After any change, run Actions -> Prow -> Run workflow (label-sync)
-# in each repository.
+# in each deployed repository; projectbluefin/dakota is excluded from this rollout.
 labels:
   kind:
     - name: bug
@@ -93,7 +93,7 @@ require_matching_label:
       ### Reporter or contributor
 
       - If no `kind/*` label is set, categorize the issue with one of: `/kind bug`, `/kind regression`, `/kind security`, `/kind feature`, `/kind documentation` or `/kind cleanup`.
-      - Optionally add an area with `/area <area>`: `desktop`, `flatpak`, `gaming`, `hardware`, `installer` or `dx`.
+      - Optionally add an area with `/area <area>` if this repository supports area labels; use a value from its label list.
 
       ### Triager or maintainer
 
@@ -113,3 +113,7 @@ tide:
 
 blunderbuss:
   request_count: 2
+
+# Four-hour reconciliation plus a two-hour allowance for scheduling delays.
+sweep:
+  lookback: 6h
