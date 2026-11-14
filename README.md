@@ -81,6 +81,44 @@ matches the SHA the caller reviewed. Without this, the SHA pin on the workflow
 file only pins the caller; the parser still floats on the mutable default
 branch (projectbluefin/common#1446).
 
+### Running Prow as the MERGERAPTOR App
+
+The reusable `.github/workflows/prow-run.yml` runs the Prow action
+(`cncf/prow-github-actions` v3.5.0) with a `MERGERAPTOR` App token instead of the
+job's `GITHUB_TOKEN`. GitHub does not start workflow runs for events caused by
+`GITHUB_TOKEN`, so when Prow adds an `lgtm` + `approved` pull request to a merge
+queue with that token, the queue's `merge_group` checks never start and the pull
+request waits there indefinitely (chairlift#757 on 2026-11-14: 28 minutes in the
+queue, no check runs, until a person re-queued it). Events caused by an App token
+do start workflow runs.
+
+A caller switches its `prow` job from the upstream reusable workflow to this one
+and passes the same two secrets as `transfer`:
+
+```yaml
+  prow:
+    needs: authorize
+    if: ...  # unchanged
+    permissions:  # unchanged
+      contents: write
+      issues: write
+      pull-requests: write
+      statuses: write
+      actions: write
+    uses: projectbluefin/.project/.github/workflows/prow-run.yml@<commit>
+    with:
+      jobs: ...           # unchanged
+      prow-commands: ...  # unchanged
+    secrets:
+      MERGERAPTOR_APP_ID: ${{ secrets.MERGERAPTOR_APP_ID }}
+      MERGERAPTOR_PRIVATE_KEY: ${{ secrets.MERGERAPTOR_PRIVATE_KEY }}
+```
+
+When the secrets are unavailable to a run (for example a review on a fork pull
+request), the workflow falls back to the caller's `GITHUB_TOKEN`, which is what
+every caller used before. The same fallback applies if the App token cannot be created. With the App token, Prow's comments and label changes come from
+`mergeraptor[bot]` instead of `github-actions[bot]`.
+
 Deploy this repository's authorization workflow and roster before updating
 the Prow callers: common, bluefin-report, chairlift, dakota-iso, gutenprint-printer-app,
 hplip-printer-app, ps-printer-app, ghostscript-printer-app, utah, server, homebrew-tap and fsdk-containers.
